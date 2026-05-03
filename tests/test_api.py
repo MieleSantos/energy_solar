@@ -33,7 +33,14 @@ def test_create_plant_validation_error(client):
     })
     assert response.status_code == 422
     data = response.get_json()
-    assert 'messages' in data
+    assert "details" in data
+
+
+def test_create_plant_without_payload(client):
+    response = client.post("/api/plants", json=None)
+    assert response.status_code == 400
+    data = response.get_json()
+    assert data["message"] == "No input data provided"
 
 def test_get_plants(client):
     # Setup test data
@@ -60,3 +67,10 @@ def test_delete_plant(client):
     
     get_res = client.get('/api/plants')
     assert len(get_res.get_json()) == 0
+
+
+def test_delete_plant_not_found(client):
+    response = client.delete("/api/plants/99999")
+    assert response.status_code == 404
+    data = response.get_json()
+    assert data["message"] == "Plant not found"

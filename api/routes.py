@@ -1,8 +1,9 @@
 from flask import Blueprint, request, jsonify, render_template
-from marshmallow import ValidationError
-from api.models import Plant
+from api.exceptions import ApiError
 from api.schemas import plant_schema, plants_schema
-from api import db
+from api.services.plant_service import create_plant as create_plant_service
+from api.services.plant_service import delete_plant as delete_plant_service
+from api.services.plant_service import list_plants
 
 bp = Blueprint('api', __name__)
 
@@ -12,29 +13,19 @@ def index():
 
 @bp.route('/api/plants', methods=['GET'])
 def get_plants():
-    plants = Plant.query.order_by(Plant.id.desc()).all()
+    plants = list_plants()
     return jsonify(plants_schema.dump(plants))
 
 @bp.route('/api/plants', methods=['POST'])
 def create_plant():
-    json_data = request.get_json()
+    json_data = request.get_json(silent=True)
     if not json_data:
-        return jsonify({'error': 'No input data provided'}), 400
+        raise ApiError("No input data provided", status_code=400)
 
-    try:
-        # Validate and deserialize input
-        new_plant = plant_schema.load(json_data)
-    except ValidationError as err:
-        return jsonify({'error': 'Validation Error', 'messages': err.messages}), 422
-
-    db.session.add(new_plant)
-    db.session.commit()
-    
+    new_plant = create_plant_service(json_data)
     return jsonify(plant_schema.dump(new_plant)), 201
 
 @bp.route('/api/plants/<int:plant_id>', methods=['DELETE'])
 def delete_plant(plant_id):
-    plant = Plant.query.get_or_404(plant_id)
-    db.session.delete(plant)
-    db.session.commit()
+    delete_plant_service(plant_id)
     return jsonify({'message': 'Plant deleted successfully'}), 200

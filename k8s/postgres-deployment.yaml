@@ -39,7 +39,7 @@ spec:
           # Liveness probe baseada no healthcheck do docker-compose
           livenessProbe:
             exec:
-              command: [ "pg_isready", "-U", "energy_user", "-d", "energy_solar" ]
+              command: [ "sh", "-c", "pg_isready -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\"" ]
             initialDelaySeconds: 5
             periodSeconds: 5
       volumes:

@@ -34,3 +34,8 @@ spec:
                 secretKeyRef:
                   name: app-secret
                   key: DATABASE_URL
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: SECRET_KEY
