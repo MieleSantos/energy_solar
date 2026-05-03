@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: flask-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_APP
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: FLASK_APP
+            - name: FLASK_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: FLASK_DEBUG
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DATABASE_URL

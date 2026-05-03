@@ -1,0 +1,331 @@
+:root {
+    --bg-color: #0b0f19;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #f59e0b; /* Solar Yellow / Amber */
+    --accent-hover: #d97706;
+    --danger: #ef4444;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Background Animated Blobs */
+.bg-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+    opacity: 0.4;
+    animation: float 20s infinite ease-in-out alternate;
+}
+
+.blob-1 {
+    top: -10%;
+    left: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #f59e0b 0%, transparent 70%);
+}
+
+.blob-2 {
+    bottom: -10%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, 50px) scale(1.1); }
+}
+
+/* Layout */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.glass-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+}
+
+/* Header Components */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sun-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #fcd34d, #f59e0b);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.badge {
+    font-size: 0.75rem;
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.panel-header h2 {
+    margin: 0;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+input, select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 0.875rem 1rem;
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+select option {
+    background-color: var(--bg-color);
+}
+
+/* Buttons */
+.btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+}
+
+.btn-icon {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    border-radius: 8px;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.btn-delete {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.btn-delete:hover {
+    background: var(--danger);
+    color: #fff;
+}
+
+/* Table */
+.table-container {
+    overflow-x: auto;
+}
+
+.glass-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.glass-table th, .glass-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.glass-table th {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.glass-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.glass-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-ativa {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.status-manutencao {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.status-inativa {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.status-construcao {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.glass-table tbody tr {
+    animation: fadeIn 0.3s ease-out forwards;
+}
