@@ -64,3 +64,80 @@ PYTHONPATH=. poetry run pytest
 
 Há pipeline em `.github/workflows/ci.yml` executando lint e testes em `push` e `pull_request`.
 
+## Deploy AWS (EC2 + RDS + ECR)
+
+### Arquivos de produção
+
+- `docker-compose.prod.yml`: stack de produção (somente `web`).
+- `.env.prod.example`: variáveis de ambiente esperadas no servidor.
+- `.github/workflows/deploy-aws-ec2.yml`: CI/CD para build, push no ECR e deploy na EC2.
+- `deploy/aws/provisioning.md`: passo a passo de provisionamento AWS.
+- `deploy/nginx/energy-solar.conf`: reverse proxy Nginx.
+
+### 1) Provisionar base AWS
+
+Siga `deploy/aws/provisioning.md` para criar:
+
+- ECR repository
+- RDS PostgreSQL privado
+- EC2 com Security Groups corretos (22 restrito, 80/443 públicos, 5432 somente EC2 -> RDS)
+
+### 2) Bootstrap da EC2
+
+No servidor:
+
+```bash
+chmod +x deploy/aws/ec2-bootstrap.sh
+./deploy/aws/ec2-bootstrap.sh
+```
+
+Crie `.env.prod` na EC2 a partir de `.env.prod.example`.
+
+### 3) Configurar GitHub Actions deploy
+
+No GitHub, configure:
+
+- Environment `production`
+- Secrets:
+  - `AWS_DEPLOY_ROLE_ARN`
+  - `EC2_SSH_PRIVATE_KEY`
+- Variables:
+  - `AWS_REGION`
+  - `ECR_REPOSITORY`
+  - `EC2_HOST`
+  - `EC2_USER`
+  - `APP_DIR` (ex: `/opt/energy-solar`)
+
+O workflow de deploy executa no push para `main`.
+
+### 4) Nginx + TLS
+
+No servidor:
+
+```bash
+chmod +x deploy/nginx/setup_tls.sh
+./deploy/nginx/setup_tls.sh your-domain.com you@example.com
+```
+
+### 5) Smoke test pós deploy
+
+No servidor:
+
+```bash
+chmod +x deploy/aws/smoke-test.sh
+./deploy/aws/smoke-test.sh https://your-domain.com
+```
+
+### 6) Rollback
+
+Use uma tag anterior publicada no ECR:
+
+```bash
+chmod +x deploy/aws/rollback.sh
+./deploy/aws/rollback.sh <previous-image-tag>
+```
+
+### Hardening recomendado
+
+Veja `deploy/aws/hardening.md` para checklist mínimo de segurança operacional.
+
